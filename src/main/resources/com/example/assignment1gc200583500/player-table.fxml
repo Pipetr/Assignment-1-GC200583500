@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="600.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.assignment1gc200583500.PlayerChartController">
+<AnchorPane prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.assignment1gc200583500.PlayerChartController">
    <children>
       <BorderPane prefHeight="700.0" prefWidth="1080.0">
          <top>
@@ -37,6 +37,9 @@
                   <TableColumn fx:id="minutesCol" prefWidth="75.0" text="Minutes" />
                   <TableColumn fx:id="turnoversCol" prefWidth="75.0" text="Turnovers" />
                </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
             </TableView>
          </center>
          <bottom>
