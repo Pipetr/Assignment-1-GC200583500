@@ -10,8 +10,8 @@ public class Player {
     private int assists;
     private int steals;
     private int blocks;
-    private int oRebounds;
-    private int dRebounds;
+    private int offRebounds;
+    private int defRebounds;
     private int turnovers;
     private int fouls;
     private int minutes;
@@ -19,7 +19,7 @@ public class Player {
     public Player() {}
 
     public Player(String playerName, String team, String position, String country, int points, int rebounds,
-                  int assists, int steals, int blocks, int oRebounds, int dRebounds, int turnovers, int fouls,
+                  int assists, int steals, int blocks, int offRebounds, int defRebounds, int turnovers, int fouls,
                   int minutes) {
         this.playerName = playerName;
         this.team = team;
@@ -30,8 +30,8 @@ public class Player {
         this.assists = assists;
         this.steals = steals;
         this.blocks = blocks;
-        this.oRebounds = oRebounds;
-        this.dRebounds = dRebounds;
+        this.offRebounds = offRebounds;
+        this.defRebounds = defRebounds;
         this.turnovers = turnovers;
         this.fouls = fouls;
         this.minutes = minutes;
@@ -140,24 +140,24 @@ public class Player {
         this.blocks = blocks;
     }
 
-    public int getoRebounds() {
-        return oRebounds;
+    public int getOffRebounds() {
+        return offRebounds;
     }
 
-    public void setoRebounds(int oRebounds) {
+    public void setOffRebounds(int offRebounds) {
         // Validate that offensive rebounds is not negative
-        validateNonNegative(oRebounds, "Offensive rebounds");
-        this.oRebounds = oRebounds;
+        validateNonNegative(offRebounds, "Offensive rebounds");
+        this.offRebounds = offRebounds;
     }
 
-    public int getdRebounds() {
-        return dRebounds;
+    public int getDefRebounds() {
+        return defRebounds;
     }
 
-    public void setdRebounds(int dRebounds) {
+    public void setDefRebounds(int defRebounds) {
         // Validate that defensive rebounds is not negative
-        validateNonNegative(dRebounds, "Defensive rebounds");
-        this.dRebounds = dRebounds;
+        validateNonNegative(defRebounds, "Defensive rebounds");
+        this.defRebounds = defRebounds;
     }
 
     public int getTurnovers() {
@@ -188,5 +188,24 @@ public class Player {
         // Validate that minutes is not negative
         validateNonNegative(minutes, "Minutes");
         this.minutes = minutes;
+    }
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerName='" + playerName + '\'' +
+                ", team='" + team + '\'' +
+                ", position='" + position + '\'' +
+                ", country='" + country + '\'' +
+                ", points=" + points +
+                ", rebounds=" + rebounds +
+                ", assists=" + assists +
+                ", steals=" + steals +
+                ", blocks=" + blocks +
+                ", oRebounds=" + offRebounds +
+                ", dRebounds=" + defRebounds +
+                ", turnovers=" + turnovers +
+                ", fouls=" + fouls +
+                ", minutes=" + minutes +
+                '}';
     }
 }

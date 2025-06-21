@@ -8,10 +8,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="700.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.assignment1gc200583500.PlayerChartController">
    <children>
-      <BorderPane prefHeight="700.0" prefWidth="1080.0">
+      <BorderPane prefHeight="700.0" prefWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <Label text="Payers Stats" BorderPane.alignment="CENTER">
                <font>

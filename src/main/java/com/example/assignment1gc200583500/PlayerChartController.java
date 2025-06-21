@@ -78,8 +78,8 @@ public class PlayerChartController {
         assistsCol.setCellValueFactory(new PropertyValueFactory<>("assists"));
         stealsCol.setCellValueFactory(new PropertyValueFactory<>("steals"));
         blocksCol.setCellValueFactory(new PropertyValueFactory<>("blocks"));
-        oreboundsCol.setCellValueFactory(new PropertyValueFactory<>("oRebounds"));
-        dreboundsCol.setCellValueFactory(new PropertyValueFactory<>("dRebounds"));
+        oreboundsCol.setCellValueFactory(new PropertyValueFactory<>("offRebounds"));
+        dreboundsCol.setCellValueFactory(new PropertyValueFactory<>("defRebounds"));
         turnoversCol.setCellValueFactory(new PropertyValueFactory<>("turnovers"));
         foulsCol.setCellValueFactory(new PropertyValueFactory<>("fouls"));
         minutesCol.setCellValueFactory(new PropertyValueFactory<>("minutes"));
@@ -116,8 +116,8 @@ public class PlayerChartController {
                     tableView.getItems().add(player);
                 }
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
