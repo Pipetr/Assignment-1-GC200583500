@@ -12,10 +12,7 @@ import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class PlayerChartController {
 
@@ -38,8 +35,47 @@ public class PlayerChartController {
     private RadioButton rbUSA;
 
     @FXML
-    void applyFilter(ActionEvent event) {
+    void applyFilter(ActionEvent event) throws SQLException {
+        Connection con = connector();
+        if (con != null) {
+            Statement st = con.createStatement();
+            String query = "SELECT * FROM player_stats";
+            // get the country
+            StringBuilder whereClause = new StringBuilder(" WHERE 1=1");
+            if (rbCanada.isSelected()) {
+                whereClause.append(" AND playercountry = 'Canada'");
+            }
+            if (rbUSA.isSelected()) {
+                whereClause.append(" AND playercountry = 'United States'");
+            }
+            if (rbRestWorld.isSelected()) {
+                whereClause.append(" AND playercountry NOT IN ('Canada', 'United States')");
+            }
+            if (cbTeams.getValue() != null && !cbTeams.getValue().equals("All")) {
+                whereClause.append(" AND playerteam = '").append(cbTeams.getValue()).append("'");
+            }
+            query += whereClause.toString();
+            ResultSet resultSet = st.executeQuery(query);
+            // Clear existing data in the chart
+            chartStats.getData().clear();
+            while (resultSet.next()) {
+                String playerName = resultSet.getString("playerName");
+                int points = resultSet.getInt("points");
+                String team = resultSet.getString("playerteam");
 
+                // Create a Player object and add it to the chart
+                chartBuilder(playerName, points, team);
+            }
+        }
+
+    }
+
+    private void chartBuilder(String playerName, int points, String team) {
+        Player player = new Player(playerName, team, points);
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName(playerName);
+        series.getData().add(new XYChart.Data<>(playerName, points));
+        chartStats.getData().add(series);
     }
 
     @FXML
@@ -74,6 +110,9 @@ public class PlayerChartController {
 
         try {
             Connection conector = connector();
+            // Initialize the ComboBox with "All" option
+            cbTeams.getItems().add("All");
+
             if (conector != null) {
                 Statement statement = conector.createStatement();
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM player_stats");
@@ -90,11 +129,7 @@ public class PlayerChartController {
                     }
 
                     // Create a Player object and add it to the chart
-                    Player player = new Player(playerName, team, points);
-                    XYChart.Series<String, Number> series = new XYChart.Series<>();
-                    series.setName(playerName);
-                    series.getData().add(new XYChart.Data<>(playerName, points));
-                    chartStats.getData().add(series);
+                    chartBuilder(playerName, points, team);
                 }
 
             }
