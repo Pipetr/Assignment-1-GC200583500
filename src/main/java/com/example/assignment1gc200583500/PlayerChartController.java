@@ -2,126 +2,115 @@ package com.example.assignment1gc200583500;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
-import java.sql.*;
-
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class PlayerChartController {
 
     @FXML
-    private TableColumn<Player, Integer> assistsCol;
+    private Button btnTableview;
 
     @FXML
-    private TableColumn<Player, Integer> blocksCol;
+    private ComboBox<String> cbTeams;
 
     @FXML
-    private Button btnChart;
+    private BarChart<String, Number> chartStats;
 
     @FXML
-    private TableColumn<Player, String> countryCol;
+    private RadioButton rbCanada;
 
     @FXML
-    private TableColumn<Player, Integer> dreboundsCol;
+    private RadioButton rbRestWorld;
 
     @FXML
-    private TableColumn<Player, Integer> foulsCol;
+    private RadioButton rbUSA;
 
     @FXML
-    private TableColumn<Player, Integer> minutesCol;
+    void applyFilter(ActionEvent event) {
+
+    }
 
     @FXML
-    private TableColumn<Player, Integer> oreboundsCol;
-
-    @FXML
-    private TableColumn<Player, String> payerNameCol;
-
-    @FXML
-    private TableColumn<Player, Integer> pointsCol;
-
-    @FXML
-    private TableColumn<Player, String> positionCol;
-
-    @FXML
-    private TableColumn<Player, Integer> reboundsCol;
-
-    @FXML
-    private TableColumn<Player, Integer> stealsCol;
-
-    @FXML
-    private TableView<Player> tableView;
-
-    @FXML
-    private TableColumn<Player, String> teamCol;
-
-    @FXML
-    private TableColumn<Player, Integer> turnoversCol;
-
-    @FXML
-    void chartView(ActionEvent event) {
-
+    void showTableView(ActionEvent event) {
+        // Logic to switch to the Player Table View
+        // This could involve changing the scene or updating the current view
+        try{
+            Stage stage = new Stage();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("player-table.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1080, 700);
+            stage.setTitle("Player Statistics Table");
+            stage.setScene(scene);
+            stage.show();
+        }catch(IOException e){
+            System.out.println("Error loading TableView: " + e.getMessage());
+        }
     }
 
     @FXML
     void initialize() {
-        // Initialize the table columns with appropriate properties
-        payerNameCol.setCellValueFactory(new PropertyValueFactory<>("playerName"));
-        teamCol.setCellValueFactory(new PropertyValueFactory<>("team"));
-        positionCol.setCellValueFactory(new PropertyValueFactory<>("position"));
-        countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
-        pointsCol.setCellValueFactory(new PropertyValueFactory<>("points"));
-        reboundsCol.setCellValueFactory(new PropertyValueFactory<>("rebounds"));
-        assistsCol.setCellValueFactory(new PropertyValueFactory<>("assists"));
-        stealsCol.setCellValueFactory(new PropertyValueFactory<>("steals"));
-        blocksCol.setCellValueFactory(new PropertyValueFactory<>("blocks"));
-        oreboundsCol.setCellValueFactory(new PropertyValueFactory<>("offRebounds"));
-        dreboundsCol.setCellValueFactory(new PropertyValueFactory<>("defRebounds"));
-        turnoversCol.setCellValueFactory(new PropertyValueFactory<>("turnovers"));
-        foulsCol.setCellValueFactory(new PropertyValueFactory<>("fouls"));
-        minutesCol.setCellValueFactory(new PropertyValueFactory<>("minutes"));
+        // Initialize the chart and other UI components if necessary
+        // For example, you might want to set up the chart axes, load data, etc.
+        // The char will show players' points
+        btnTableview.setOnAction((event) -> {
+            try{
+                showTableView(event);
+            } catch (Exception e) {
+                System.out.println("Error showing table view: " + e.getMessage());
+            }
+        });
+
 
         try {
-            Connection con = connector();
-            if (con != null) {
-                // Create a statement to execute the query
-                Statement stmt = con.createStatement();
-                // Execute the query to get player data
-                ResultSet rs = stmt.executeQuery("SELECT * FROM player_stats");
+            Connection conector = connector();
+            if (conector != null) {
+                Statement statement = conector.createStatement();
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM player_stats");
+                // Clear existing data in the chart
+                chartStats.getData().clear();
 
-                // Clear existing items in the table view
-                tableView.getItems().clear();
+                while (resultSet.next()) {
+                    String playerName = resultSet.getString("playerName");
+                    int points = resultSet.getInt("points");
+                    String team = resultSet.getString("playerteam");
+                    // Set up the ComboBox with team options, the combo box will be populated with team names obtained from the database
+                    if (!cbTeams.getItems().contains(team)) {
+                        cbTeams.getItems().add(team);
+                    }
 
-                // Loop through the result set and add each player to the table view
-                while (rs.next()) {
-                    Player player = new Player(
-                            rs.getString("playerName"),
-                            rs.getString("playerteam"),
-                            rs.getString("playerposition"),
-                            rs.getString("playercountry"),
-                            rs.getInt("points"),
-                            rs.getInt("rebs"),
-                            rs.getInt("assists"),
-                            rs.getInt("steals"),
-                            rs.getInt("blocks"),
-                            rs.getInt("offRebs"),
-                            rs.getInt("defRebs"),
-                            rs.getInt("turnovers"),
-                            rs.getInt("fouls"),
-                            rs.getInt("mins")
-                    );
-                    tableView.getItems().add(player);
+                    // Create a Player object and add it to the chart
+                    Player player = new Player(playerName, team, points);
+                    XYChart.Series<String, Number> series = new XYChart.Series<>();
+                    series.setName(playerName);
+                    series.getData().add(new XYChart.Data<>(playerName, points));
+                    chartStats.getData().add(series);
                 }
+
             }
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error initializing PlayerChartController: " + e.getMessage());
+
         }
+
+
+
+
+
+
     }
 
-    // method to return the connection object
+    // Additional methods to handle chart data, filtering, etc. can be added here
     private Connection connector(){
         try {
             return DriverManager.getConnection("jdbc:mysql://172.31.22.43:3306/Felipe200583500",

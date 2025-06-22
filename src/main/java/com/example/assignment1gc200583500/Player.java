@@ -18,6 +18,17 @@ public class Player {
 
     public Player() {}
 
+    public Player(String playerName, String team, int points) {
+        // Validate that playerName, team, and points are not null or empty or should have at least 3 characters
+        validateString(playerName, "Player name");
+        validateString(team, "Team name");
+        validateNonNegative(points, "Points");
+
+        this.playerName = playerName;
+        this.team = team;
+        this.points = points;
+    }
+
     public Player(String playerName, String team, String position, String country, int points, int rebounds,
                   int assists, int steals, int blocks, int offRebounds, int defRebounds, int turnovers, int fouls,
                   int minutes) {
