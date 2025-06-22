@@ -2,11 +2,16 @@ package com.example.assignment1gc200583500;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.*;
 
@@ -63,7 +68,19 @@ public class PlayerTableController {
 
     @FXML
     void chartView(ActionEvent event) {
-
+        try{
+            // Get the current stage from the button
+            Stage stage = (Stage) btnChart.getScene().getWindow();
+            // Load the chart view FXML file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("players-chart.fxml"));
+            Parent root = loader.load();
+            // Set the scene with the loaded chart view
+            Scene scene = new Scene(root, 1080, 700);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -83,6 +100,14 @@ public class PlayerTableController {
         turnoversCol.setCellValueFactory(new PropertyValueFactory<>("turnovers"));
         foulsCol.setCellValueFactory(new PropertyValueFactory<>("fouls"));
         minutesCol.setCellValueFactory(new PropertyValueFactory<>("minutes"));
+
+        btnChart.setOnAction((event) -> {;
+            try {
+                chartView(event);
+            } catch (Exception e) {
+                System.out.println("Error showing chart view: " + e.getMessage());
+            }
+        });
 
         try {
             Connection con = connector();

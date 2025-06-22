@@ -85,9 +85,14 @@ public class PlayerChartController {
         try{
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("player-table.fxml"));
+            // Defined the table view as child of the current stage
+            Stage currentStage = (Stage) btnTableview.getScene().getWindow();
             Scene scene = new Scene(fxmlLoader.load(), 1080, 700);
             stage.setTitle("Player Statistics Table");
             stage.setScene(scene);
+            if (currentStage != null) {
+                currentStage.close();
+            }
             stage.show();
         }catch(IOException e){
             System.out.println("Error loading TableView: " + e.getMessage());
