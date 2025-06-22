@@ -73,6 +73,7 @@ public class PlayerChartController {
     private void chartBuilder(String playerName, int points, String team) {
         Player player = new Player(playerName, team, points);
         XYChart.Series<String, Number> series = new XYChart.Series<>();
+        // add Y-axis label
         series.setName(playerName);
         series.getData().add(new XYChart.Data<>(playerName, points));
         chartStats.getData().add(series);
@@ -136,7 +137,10 @@ public class PlayerChartController {
                     // Create a Player object and add it to the chart
                     chartBuilder(playerName, points, team);
                 }
-
+                // add Y-axis label
+                chartStats.getYAxis().setLabel("Points");
+                // remove legend
+                chartStats.setLegendVisible(false);
             }
         } catch (Exception e) {
             System.out.println("Error initializing PlayerChartController: " + e.getMessage());
